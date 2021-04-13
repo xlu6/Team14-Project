@@ -13,6 +13,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.media.AudioManager;
 import android.media.SoundPool;
+import android.os.Vibrator;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
@@ -40,6 +41,7 @@ public class L1_GameView extends SurfaceView implements Runnable {
     AlertDialog.Builder dialogBuilder;
     AlertDialog gameOverDialog, passDialog;
     Bitmap citizenIcon;
+    Vibrator vibrator;
 
     public L1_GameView(L1_Activity activity, int screenX, int screenY){
         super(activity);
@@ -62,6 +64,10 @@ public class L1_GameView extends SurfaceView implements Runnable {
         car1 = new Car1_left(getResources());
         car2 = new Car2_right(getResources());
         car3 = new Car3_left(getResources());
+
+
+        //Initialize a vibrator, when the character gets hit by a car, the phone vibrates
+        vibrator = (Vibrator)activity.getSystemService(activity.VIBRATOR_SERVICE);
 
         citizenIcon = BitmapFactory.decodeResource(getResources(),R.drawable.citizen);
         random = new Random();
@@ -160,6 +166,7 @@ public class L1_GameView extends SurfaceView implements Runnable {
         //game over if character intersects with one of the car
         if(Rect.intersects(car1.getCollision(), player.getCollision())){
             isGameOver = true;
+            vibrator.vibrate(500);
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -170,6 +177,7 @@ public class L1_GameView extends SurfaceView implements Runnable {
         }
         if(Rect.intersects(car2.getCollision(), player.getCollision())){
             isGameOver = true;
+            vibrator.vibrate(500);
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -180,6 +188,7 @@ public class L1_GameView extends SurfaceView implements Runnable {
         }
         if(Rect.intersects(car3.getCollision(), player.getCollision())){
             isGameOver = true;
+            vibrator.vibrate(500);
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

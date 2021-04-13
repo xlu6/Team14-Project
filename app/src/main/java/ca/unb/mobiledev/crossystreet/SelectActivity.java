@@ -47,6 +47,22 @@ public class SelectActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        level5 = findViewById(R.id.Level5);
+        level5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SelectActivity.this, L5_Activity.class);
+                startActivity(intent);
+            }
+        });
+        level6 = findViewById(R.id.Level6);
+        level6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SelectActivity.this, L6_Activity.class);
+                startActivity(intent);
+            }
+        });
 
     }
 }

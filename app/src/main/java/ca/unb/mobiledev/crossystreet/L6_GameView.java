@@ -19,40 +19,41 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+
 import java.util.Random;
 
-public class L3_GameView extends SurfaceView implements Runnable {
+public class L6_GameView extends SurfaceView implements Runnable {
 
     private Thread thread;
     private boolean isPass = false, isPlaying, isGameOver = false;
-    private L3_Background background3;
+    private L6_Background background6;
     public int screenX, screenY, score = 0;
     private SharedPreferences prefs;
     private Paint paint;
     private Player player;
 
-    private Car1_right car1;
-    private Car2_left car2;
-    private Car4_left car3;
-    private Car3_right car4;
+    private AmbulanceNight_right car1;
+    private CarANight_left car2;
+    private TaxiNight_left car3;
+    private CarVanNight_right car4;
 
     private Random random;
-    public L3_Activity activity;
+    public L6_Activity activity;
     AlertDialog.Builder dialogBuilder;
     AlertDialog gameOverDialog, passDialog;
     Bitmap citizenIcon;
     Vibrator vibrator;
 
-    public L3_GameView(L3_Activity activity, int screenX, int screenY){
+    public L6_GameView(L6_Activity activity, int screenX, int screenY){
         super(activity);
 
         this.activity = activity;
 
         //share preference to store new high score
-        prefs = activity.getSharedPreferences("L3", Context.MODE_PRIVATE);
+        prefs = activity.getSharedPreferences("L6", Context.MODE_PRIVATE);
         this.screenX = screenX;
         this.screenY = screenY;
-        background3 = new L3_Background(screenX, screenY, getResources());
+        background6 = new L6_Background(screenX, screenY, getResources());
 
         player = new Player(screenX, getResources());
 
@@ -60,10 +61,10 @@ public class L3_GameView extends SurfaceView implements Runnable {
         paint.setTextSize(80);
         paint.setColor(Color.BLACK);
 
-        car1 = new Car1_right(getResources());
-        car2 = new Car2_left(getResources());
-        car3 = new Car4_left(getResources());
-        car4 = new Car3_right(getResources());
+        car1 = new AmbulanceNight_right(getResources());
+        car2 = new CarANight_left(getResources());
+        car3 = new TaxiNight_left(getResources());
+        car4 = new CarVanNight_right(getResources());
 
         //Initialize a vibrator, when the character gets hit by a car, the phone vibrates
         vibrator = (Vibrator)activity.getSystemService(activity.VIBRATOR_SERVICE);
@@ -82,12 +83,12 @@ public class L3_GameView extends SurfaceView implements Runnable {
     }
 
     private void update(){
-        background3.x = 0;
-        background3.y = 0;
+        background6.x = 0;
+        background6.y = 0;
 
         //when tap on screen, character move up the y-axis by 25 pixel, and score+10
         if(player.isGoingUp){
-            player.y -= 25;
+            player.y -= 20;
             score+=10;
         }
 
@@ -107,79 +108,76 @@ public class L3_GameView extends SurfaceView implements Runnable {
         }
 
         //car speed
-        car1.x -= car1.speed;
-        if(car1.x + car1.width < -200){
-            car1.speed = random.nextInt(35);
+        car1.x += car1.speed;
+        if(car1.x + car1.width > 1300){
+            car1.speed = random.nextInt(45);
             if(car1.speed < 10){
-                car1.speed = 15;
+                car1.speed = 25;
             }
             //car1 can only go in lane y=1640 or y=1380
-            int r = random.nextInt(2);
-            if(r == 1){
-                car1.y = 845;
+            int r = random.nextInt(4);
+            if(r == 3){
+                car1.y = 1520;
             }
             if(r == 0){
-                car1.y = 1370;
+                car1.y = 1260;
             }
             //go back to its start position and change speed
-            car1.x = 1250;
+            car1.x = -100;
         }
 
-        car2.x += car2.speed;
-        if(car2.x + car2.width > 1280){
+        car2.x -= car2.speed;
+        if(car2.x + car2.width < -100){
 
-            car2.speed = random.nextInt(35);
-            if(car2.speed < 8){
-                car2.speed = 15;
+            car2.speed = random.nextInt(45);
+            if(car2.speed < 15){
+                car2.speed = 25;
             }
             //car2 can only go in lane y=490 or y=750
             int r = random.nextInt(2);
             if(r == 1){
-                car2.y = 490;
+                car2.y = 620;
             }
             if(r == 0){
-                car2.y = 750;
+                car2.y = 1150;
             }
             //go back to its start position and change speed
-            car2.x = -270;
+            car2.x = 1400;
         }
 
-        car3.x += car3.speed;
-        if(car3.x + car3.width > 1300){
+        car3.x -= car3.speed;
+        if(car3.x + car3.width < -100){
             car3.speed = random.nextInt(50);
-            if(car3.speed < 20){
-                car3.speed = 20;
+            if(car3.speed < 25){
+                car3.speed = 25;
             }
             //car3 can only go in lane y=825 or y=570
             int r = random.nextInt(2);
             if(r == 1){
-                car3.y = 1625;
+                car3.y = 1410;
             }
             if(r == 0){
-                car3.y = 585;
+                car3.y = 890;
             }
             //go back to its start position and change speed
-            car3.x = -200;
+            car3.x = 1200;
         }
 
-        car4.x -= car4.speed;
-        if(car4.x + car4.width < -250){
-            car4.speed = random.nextInt(45);
-            if(car4.speed < 35){
-                car4.speed = 35;
+        car4.x += car4.speed;
+        if(car4.x + car4.width > 1300){
+            car4.speed = random.nextInt(35);
+            if(car4.speed < 10){
+                car4.speed = 20;
             }
 
-            int r = random.nextInt(5);
+            int r = random.nextInt(2);
             if(r == 0){
-                car4.y = 1520;
+                car4.y = 750;
             }
-            if(r == 3){
-                car4.y = 1260;
-            }else{
-                car4.y = 2500;
+            if(r == 1){
+                car4.y = 1010;
             }
-
-            car4.x = 1250;
+            car4.x = -100;
 
         }
 
@@ -222,6 +220,7 @@ public class L3_GameView extends SurfaceView implements Runnable {
 
         if(Rect.intersects(car4.getCollision(), player.getCollision())){
             isGameOver = true;
+            vibrator.vibrate(500);
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -236,7 +235,7 @@ public class L3_GameView extends SurfaceView implements Runnable {
     private void draw(){
         if(getHolder().getSurface().isValid()){
             Canvas canvas = getHolder().lockCanvas();
-            canvas.drawBitmap(background3.background, background3.x, background3.y, paint);
+            canvas.drawBitmap(background6.background, background6.x, background6.y, paint);
 
             canvas.drawBitmap(car1.getCar(),car1.x, car1.y, paint);
             canvas.drawBitmap(car2.getCar(),car2.x, car2.y, paint);
@@ -267,9 +266,9 @@ public class L3_GameView extends SurfaceView implements Runnable {
     }
 
     private void saveHighScore() {
-        if(prefs.getInt("highscore3", 0) < score){
+        if(prefs.getInt("highscore6", 0) < score){
             SharedPreferences.Editor editor = prefs.edit();
-            editor.putInt("highscore3", score);
+            editor.putInt("highscore6", score);
             editor.apply();
         }
     }
@@ -329,20 +328,20 @@ public class L3_GameView extends SurfaceView implements Runnable {
         gameOverDialog = dialogBuilder.create();
         gameOverDialog.getWindow().setGravity(Gravity.TOP);
         gameOverDialog.show();
-        home_button.setOnClickListener(new OnClickListener() {
+        home_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 activity.finish();
             }
         });
-        select_button.setOnClickListener(new OnClickListener() {
+        select_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), SelectActivity.class);
                 activity.startActivity(intent);
             }
         });
-        restart_button.setOnClickListener(new OnClickListener() {
+        restart_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = activity.getIntent();
@@ -366,20 +365,20 @@ public class L3_GameView extends SurfaceView implements Runnable {
         dialogBuilder.setView(passPopup);
         passDialog = dialogBuilder.create();
         passDialog.show();
-        home_button.setOnClickListener(new OnClickListener() {
+        home_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 activity.finish();
             }
         });
-        select_button.setOnClickListener(new OnClickListener() {
+        select_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), SelectActivity.class);
                 activity.startActivity(intent);
             }
         });
-        restart_button.setOnClickListener(new OnClickListener() {
+        restart_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = activity.getIntent();
@@ -389,3 +388,4 @@ public class L3_GameView extends SurfaceView implements Runnable {
         });
     }
 }
+

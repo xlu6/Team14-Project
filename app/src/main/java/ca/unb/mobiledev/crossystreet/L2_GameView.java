@@ -11,6 +11,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.os.Vibrator;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
@@ -37,6 +38,7 @@ public class L2_GameView extends SurfaceView implements Runnable {
     AlertDialog.Builder dialogBuilder;
     AlertDialog gameOverDialog, passDialog;
     Bitmap citizenIcon;
+    Vibrator vibrator;
 
     public L2_GameView(L2_Activity activity, int screenX, int screenY){
         super(activity);
@@ -44,7 +46,7 @@ public class L2_GameView extends SurfaceView implements Runnable {
         this.activity = activity;
 
         //share preference to store new high score
-        prefs = activity.getSharedPreferences("L1", Context.MODE_PRIVATE);
+        prefs = activity.getSharedPreferences("L2", Context.MODE_PRIVATE);
         this.screenX = screenX;
         this.screenY = screenY;
         background2 = new L2_Background(screenX, screenY, getResources());
@@ -58,6 +60,9 @@ public class L2_GameView extends SurfaceView implements Runnable {
         car1 = new AmbulanceNight_left(getResources());
         car2 = new TaxiNight_right(getResources());
         car3 = new CarANight_left(getResources());
+
+        //Initialize a vibrator, when the character gets hit by a car, the phone vibrates
+        vibrator = (Vibrator)activity.getSystemService(activity.VIBRATOR_SERVICE);
 
         citizenIcon = BitmapFactory.decodeResource(getResources(),R.drawable.citizen);
         random = new Random();
@@ -156,6 +161,7 @@ public class L2_GameView extends SurfaceView implements Runnable {
         //game over if character intersects with one of the car
         if(Rect.intersects(car1.getCollision(), player.getCollision())){
             isGameOver = true;
+            vibrator.vibrate(500);
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -166,6 +172,7 @@ public class L2_GameView extends SurfaceView implements Runnable {
         }
         if(Rect.intersects(car2.getCollision(), player.getCollision())){
             isGameOver = true;
+            vibrator.vibrate(500);
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -176,6 +183,7 @@ public class L2_GameView extends SurfaceView implements Runnable {
         }
         if(Rect.intersects(car3.getCollision(), player.getCollision())){
             isGameOver = true;
+            vibrator.vibrate(500);
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -219,9 +227,9 @@ public class L2_GameView extends SurfaceView implements Runnable {
     }
 
     private void saveHighScore() {
-        if(prefs.getInt("highscore1", 0) < score){
+        if(prefs.getInt("highscore2", 0) < score){
             SharedPreferences.Editor editor = prefs.edit();
-            editor.putInt("highscore1", score);
+            editor.putInt("highscore2", score);
             editor.apply();
         }
     }
